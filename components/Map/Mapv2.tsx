@@ -42,7 +42,7 @@ export default function Mapv2() {
     >
       {(utils) => (
         <React.Fragment>
-          <Controls {...utils} />
+          {/* <Controls {...utils} /> */}
           <TransformComponent
             contentStyle={{
               width: "100%",

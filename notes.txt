@@ -1,4 +1,9 @@
 
 
+- location is now working for now...
 
--Find a way to access map on the ui
+tasks for tomorrow
+- clean up code on maps
+- integrate panning movements
+- make map responsive
+- add the api call on check in function

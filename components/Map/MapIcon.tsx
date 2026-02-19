@@ -131,6 +131,7 @@ export default function MapSvgIcon({ ref }: any) {
         className="[object SVGAnimatedString] mapsvg-region"
         data-stroke-width="1"
       ></path>
+
       <path
         id="PH-AUR"
         fill="#9790EE"
@@ -239,6 +240,7 @@ export default function MapSvgIcon({ ref }: any) {
         className="[object SVGAnimatedString] mapsvg-region"
         data-stroke-width="1"
       ></path>
+
       <path
         id="PH-CAM"
         fill="#9790EE"
@@ -428,6 +430,7 @@ export default function MapSvgIcon({ ref }: any) {
         className="[object SVGAnimatedString] mapsvg-region"
         data-stroke-width="1"
       ></path>
+
       <path
         id="PH-LAS"
         fill="#9790EE"
@@ -644,6 +647,7 @@ export default function MapSvgIcon({ ref }: any) {
         className="[object SVGAnimatedString] mapsvg-region"
         data-stroke-width="1"
       ></path>
+
       <path
         id="PH-WSA"
         fill="#9790EE"
