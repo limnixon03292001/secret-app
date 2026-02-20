@@ -38,6 +38,12 @@ export interface LeaderboardEntry {
   trend: "up" | "down" | "stable";
 }
 
+export interface ProvinceDetail {
+  visitorsCount: number;
+  visitDate?: string; // only if visited by current user
+  exactAddress?: string; // only if visited by current user
+}
+
 export const userData: UserStats = {
   username: "TravellerX",
   rank: "Explorer Elite",
@@ -188,7 +194,7 @@ export const leaderboardData: LeaderboardEntry[] = [
 
 // Simplified data for map visualization
 
-export const mapRegions2 = [
+export const mapRegions = [
   {
     id: "PH-SUR",
     title: "Surigao del Sur",
@@ -627,3 +633,11 @@ export const mapRegions2 = [
     path: "m 434.61,969.11914 3.37,0.31163 8.39,-6.15212 6.47,0.18094 0,-4.0612 1.9,-4.02099 0.55,-9.76095 10.72,0.56294 2.46,1.23645 12.14,-0.0403 0,0 1.01,12.45502 2.81,1.49782 2.44,-0.51267 0.08,1.31686 0,0 0.31,0.73384 0.2,0.83435 0.09,1.21635 1.84,1.63856 0,0 -3.53,9.14775 0,0 -4.06,-1.68882 -7.57,2.94538 -2.71,-0.29152 0.52,2.46286 -0.74,0.93487 1.83,0.3619 -0.18,1.23645 2.79,1.35709 -0.3,4.36277 -1.07,2.87501 -5.72,1.65865 0.29,3.71942 -2.36,-1.70891 -1.39,1.88986 3.25,1.35708 -0.09,3.15655 1.1,2.3924 1.2,-0.6132 2.8,2.3825 -0.98,1.7692 1.14,2.6539 -2.18,0.081 -0.51,1.0455 -2.53,-1.2465 -0.46,-1.6989 -3.21,-1.2264 -0.67,-1.8899 -2.66,-1.8698 1.21,-4.59396 -5.56,-0.62325 -3.07,2.50304 1.16,1.43757 -1.56,1.4073 -1.1,-1.1661 0.6,-0.955 -3.93,-1.39719 -0.93,-3.34755 1.86,-0.44231 0.13,-1.04546 -2.41,-1.63855 1.77,-0.16084 1.09,2.0306 2.8,0.13069 1.52,-1.17615 -1.39,-3.59878 -2.71,-0.21111 0.26,-0.85446 -1.17,-0.55288 1.29,-1.88987 -0.48,-1.76924 -1.66,-1.55813 -1.3,2.13113 0,0 -0.88,-7.71026 -12.31,-1.56818 -0.01,-6.37327 z",
   },
 ];
+
+export const provinceDetails: Record<string, ProvinceDetail> = {
+  NCR: {
+    visitorsCount: 5821,
+    visitDate: "October 3, 2023",
+    exactAddress: "Muzon Malabon City",
+  },
+};

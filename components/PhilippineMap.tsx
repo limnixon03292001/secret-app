@@ -8,16 +8,19 @@ import {
 } from "framer-motion";
 import { MapPin, Minus, Plus, Undo2 } from "lucide-react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
-import { mapRegions2 } from "../data/philippinesData";
+import { mapRegions } from "../data/philippinesData";
+import { ProvinceModal } from "./Modal/ProvinceModal";
 
 // --- Optimized Map Content (Memoized) ---
 const MapContent = memo(
   ({
     hoveredRegion,
     onHover,
+    setSelectedRegion,
   }: {
     hoveredRegion: string | null;
     onHover: (id: string | null) => void;
+    setSelectedRegion: (id: string | null) => void;
   }) => {
     return (
       <svg
@@ -38,7 +41,7 @@ const MapContent = memo(
           </linearGradient>
         </defs>
 
-        {mapRegions2.map((region) => (
+        {mapRegions.map((region) => (
           <motion.path
             key={region.id}
             d={region.path}
@@ -47,6 +50,7 @@ const MapContent = memo(
             strokeWidth="1"
             className={`cursor-pointer map-path  `}
             onMouseEnter={() => onHover(region.id)}
+            onClick={() => setSelectedRegion(region.title)}
             onMouseLeave={() => onHover(null)}
             whileHover={{ scale: 1.02 }}
           />
@@ -84,6 +88,7 @@ const Controls = ({ zoomIn, zoomOut, resetTransform }: any) => (
 
 export function PhilippinesMap() {
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
 
   // Motion Values for Tooltip (No re-renders)
   const mouseX = useMotionValue(0);
@@ -103,88 +108,97 @@ export function PhilippinesMap() {
     setHoveredRegion(id);
   }, []);
 
-  const activeRegion = mapRegions2.find((r) => r.id === hoveredRegion);
+  const activeRegion = mapRegions.find((r) => r.id === hoveredRegion);
 
   return (
-    <div
-      className="relative w-full h-full flex items-center justify-center overflow-hidden bg-slate-950"
-      onMouseMove={handleMouseMove}
-    >
-      <TransformWrapper initialScale={1} centerOnInit={true}>
-        {(utils) => (
-          <>
-            {/* UI Elements stay fixed inside Wrapper but outside Component */}
-            <Controls {...utils} />
+    <>
+      {/* Province Detail Modal — renders above everything */}
+      <ProvinceModal
+        regionId={selectedRegion}
+        onClose={() => setSelectedRegion(null)}
+      />
 
-            <div className="absolute top-6 right-6 flex flex-col gap-2 pointer-events-none z-20">
-              <div className="glass-panel px-3 py-1 rounded text-[10px] font-mono text-cyan-400 border border-cyan-400/20 bg-slate-900/50 backdrop-blur-sm">
-                GPS: ACTIVE
-              </div>
-              <div className="glass-panel px-3 py-1 rounded text-[10px] font-mono text-purple-400 border border-purple-400/20 bg-slate-900/50 backdrop-blur-sm">
-                SYNC: ONLINE
-              </div>
-            </div>
+      <div
+        className="relative w-full h-full flex items-center justify-center overflow-hidden bg-slate-950"
+        onMouseMove={handleMouseMove}
+      >
+        <TransformWrapper initialScale={1} centerOnInit={true}>
+          {(utils) => (
+            <>
+              {/* UI Elements stay fixed inside Wrapper but outside Component */}
+              <Controls {...utils} />
 
-            <TransformComponent
-              wrapperStyle={{ width: "100%", height: "100%" }}
-              contentStyle={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+              <div className="absolute top-6 right-6 flex flex-col gap-2 pointer-events-none z-20">
+                <div className="glass-panel px-3 py-1 rounded text-[10px] font-mono text-cyan-400 border border-cyan-400/20 bg-slate-900/50 backdrop-blur-sm">
+                  GPS: ACTIVE
+                </div>
+                <div className="glass-panel px-3 py-1 rounded text-[10px] font-mono text-purple-400 border border-purple-400/20 bg-slate-900/50 backdrop-blur-sm">
+                  SYNC: ONLINE
+                </div>
+              </div>
+
+              <TransformComponent
+                wrapperStyle={{ width: "100%", height: "100%" }}
+                contentStyle={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="relative w-full max-w-[440px]">
+                  <MapContent
+                    hoveredRegion={hoveredRegion}
+                    onHover={handleHover}
+                    setSelectedRegion={setSelectedRegion}
+                  />
+                </div>
+              </TransformComponent>
+            </>
+          )}
+        </TransformWrapper>
+
+        {/* Tooltip */}
+        <AnimatePresence mode="wait">
+          {hoveredRegion && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.15 }}
+              style={{
+                position: "fixed",
+                left: smoothX,
+                top: smoothY,
+                x: 15,
+                y: 15,
+                pointerEvents: "none",
+                zIndex: 9999,
               }}
             >
-              <div className="relative w-full max-w-[440px]">
-                <MapContent
-                  hoveredRegion={hoveredRegion}
-                  onHover={handleHover}
-                />
-              </div>
-            </TransformComponent>
-          </>
-        )}
-      </TransformWrapper>
-
-      {/* Tooltip */}
-      <AnimatePresence mode="wait">
-        {hoveredRegion && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.15 }}
-            style={{
-              position: "fixed",
-              left: smoothX,
-              top: smoothY,
-              x: 15,
-              y: 15,
-              pointerEvents: "none",
-              zIndex: 9999,
-            }}
-          >
-            <div className="glass-panel px-3 py-2 rounded border-l-2 border-cyan-400 bg-slate-900/90 backdrop-blur-md shadow-2xl border border-white/10">
-              <div className="flex items-center gap-2">
-                <MapPin size={12} className="text-cyan-400" />
-                <span className="text-xs font-bold font-display uppercase tracking-wider text-white">
-                  {activeRegion?.title}
-                </span>
-              </div>
-              <div className="text-[10px] text-gray-400 mt-1">
-                {activeRegion?.visited ? (
-                  <span className="text-green-400 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                    VISITED
+              <div className="glass-panel px-3 py-2 rounded border-l-2 border-cyan-400 bg-slate-900/90 backdrop-blur-md shadow-2xl border border-white/10">
+                <div className="flex items-center gap-2">
+                  <MapPin size={12} className="text-cyan-400" />
+                  <span className="text-xs font-bold font-display uppercase tracking-wider text-white">
+                    {activeRegion?.title}
                   </span>
-                ) : (
-                  "LOCKED"
-                )}
+                </div>
+                <div className="text-[10px] text-gray-400 mt-1">
+                  {activeRegion?.visited ? (
+                    <span className="text-green-400 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                      VISITED
+                    </span>
+                  ) : (
+                    "LOCKED"
+                  )}
+                </div>
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </>
   );
 }
