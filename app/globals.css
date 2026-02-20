@@ -33,6 +33,10 @@ body {
   fill: rgb(0, 255, 136) !important;
 }
 
+/* .transform-component-module_wrapper__SPB86 {
+  width: 100% !important;
+} */
+
 /* APPS STYLES */
 
 :root {
@@ -101,7 +105,7 @@ body {
 }
 /* Map Specific Styles */
 .map-path {
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   cursor: pointer;
 }
 .map-path:hover {

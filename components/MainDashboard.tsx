@@ -37,7 +37,8 @@ export default function MainDashboard() {
       {/* Main Content Area (Center) */}
       <main className="flex-1 h-[calc(100vh-64px)] md:h-screen overflow-y-auto md:overflow-hidden flex flex-col relative">
         {/* Top Stats Bar */}
-        <div className="p-4 md:p-6 grid grid-cols-2 md:grid-cols-4 gap-4 z-10">
+        {/* Will add stats bar soon... */}
+        {/* <div className="p-4 md:p-6 grid grid-cols-2 md:grid-cols-4 gap-4 z-10">
           <StatsCard
             title="Total Distance"
             value="12,450 km"
@@ -69,7 +70,7 @@ export default function MainDashboard() {
             className="border-neon-purple/30 bg-neon-purple/5"
             delay={0.4}
           />
-        </div>
+        </div> */}
 
         {/* Map Container */}
         <div className="flex-1 relative min-h-[500px] md:min-h-0">

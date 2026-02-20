@@ -5,32 +5,15 @@ import { motion } from "framer-motion";
 import { Trophy, Crown, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { leaderboardData } from "../data/philippinesData";
 export function Leaderboard() {
-  const [activeTab, setActiveTab] = useState<"weekly" | "all-time">("weekly");
   return (
     <div className="h-full flex flex-col glass-panel rounded-2xl overflow-hidden">
       {/* Header */}
       <div className="p-6 border-b border-white/5">
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3  ">
           <Trophy className="text-neon-yellow text-yellow-400" size={24} />
           <h2 className="text-xl font-display font-bold text-white tracking-wider">
             TOP EXPLORERS
           </h2>
-        </div>
-
-        {/* Tabs */}
-        <div className="flex bg-black/20 rounded-lg p-1">
-          <button
-            onClick={() => setActiveTab("weekly")}
-            className={`flex-1 py-2 text-xs font-bold uppercase tracking-wider rounded transition-all ${activeTab === "weekly" ? "bg-neon-blue/20 text-neon-blue shadow-[0_0_10px_rgba(0,212,255,0.2)]" : "text-gray-500 hover:text-gray-300"}`}
-          >
-            Weekly
-          </button>
-          <button
-            onClick={() => setActiveTab("all-time")}
-            className={`flex-1 py-2 text-xs font-bold uppercase tracking-wider rounded transition-all ${activeTab === "all-time" ? "bg-neon-purple/20 text-neon-purple shadow-[0_0_10px_rgba(139,92,246,0.2)]" : "text-gray-500 hover:text-gray-300"}`}
-          >
-            All Time
-          </button>
         </div>
       </div>
 

@@ -21,26 +21,26 @@ export function Sidebar() {
             alt="Profile"
             className="relative w-24 h-24 rounded-full border-2 border-white/20 object-cover z-10"
           />
-          <div className="absolute -bottom-2 -right-2 z-20 bg-black rounded-full p-1 border border-neon-yellow">
+          {/* <div className="absolute -bottom-2 -right-2 z-20 bg-black rounded-full p-1 border border-neon-yellow">
             <div className="bg-yellow-500 rounded-full p-1">
               <Star size={12} className="text-black fill-black" />
             </div>
-          </div>
+          </div> */}
         </div>
 
         <h2 className="text-xl font-display font-bold text-white tracking-wide">
           {userData.username}
         </h2>
-        <div className="flex items-center gap-2 mt-1">
+        {/* <div className="flex items-center gap-2 mt-1">
           <span className="text-xs font-bold text-neon-cyan uppercase tracking-wider px-2 py-0.5 rounded bg-neon-cyan/10 border border-neon-cyan/20">
             {userData.rank}
           </span>
           <span className="text-xs text-gray-400 font-mono">Lvl 12</span>
-        </div>
+        </div> */}
       </div>
 
       {/* Stats Grid */}
-      <div className="p-6 grid grid-cols-2 gap-4">
+      {/* <div className="p-6 grid grid-cols-2 gap-4">
         <div className="text-center p-3 rounded-lg bg-white/5 border border-white/5 hover:border-neon-blue/30 transition-colors">
           <div className="text-2xl font-mono font-bold text-white">
             {userData.provincesVisited}
@@ -57,10 +57,10 @@ export function Sidebar() {
             Cities
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Progress Section */}
-      <div className="px-6 pb-6">
+      <div className="px-6 pb-6 mt-5">
         <div className="flex justify-between items-end mb-2">
           <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">
             Philippines Explored
