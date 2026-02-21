@@ -96,9 +96,6 @@ export default function MainDashboard() {
             </motion.h1>
           </div>
         </div>
-
-        {/* Floating Action Button */}
-        <CheckInButton />
       </main>
 
       {/* Right Panel (Leaderboard) */}

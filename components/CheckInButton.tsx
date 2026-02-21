@@ -2,89 +2,93 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Loader2 } from "lucide-react";
+import { MapPin, Loader2, Navigation } from "lucide-react";
+
 export function CheckInButton() {
   const [isCheckingIn, setIsCheckingIn] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [location, setLocation] = useState<string | null>(null);
+
   const handleCheckIn = () => {
     setIsCheckingIn(true);
-    // Simulate GPS lookup
+
     setTimeout(() => {
       setIsCheckingIn(false);
       setLocation("Cebu City, Philippines");
       setShowToast(true);
-      // Hide toast after 3 seconds
       setTimeout(() => {
         setShowToast(false);
         setLocation(null);
       }, 3000);
     }, 2000);
   };
+
   return (
     <>
-      <div className="fixed bottom-8 right-8 z-50">
-        {/* Pulse Rings */}
-        <div className="absolute inset-0 rounded-full bg-neon-cyan/20 animate-ping" />
-        <div className="absolute inset-0 rounded-full bg-neon-cyan/10 animate-pulse-glow" />
+      <motion.button
+        whileHover={{
+          scale: 1.03,
+        }}
+        whileTap={{
+          scale: 0.97,
+        }}
+        onClick={handleCheckIn}
+        disabled={isCheckingIn}
+        className="relative flex w-fit items-center gap-3 px-2.5 py-2.5 rounded-xl bg-linear-to-r from-neon-cyan/20 to-neon-blue/20 border border-neon-cyan/40 text-neon-cyan hover:border-neon-cyan/80 hover:shadow-[0_0_20px_rgba(6,255,212,0.25)] transition-all duration-300 overflow-hidden group disabled:opacity-60"
+      >
+        {/* Shimmer sweep on hover */}
+        <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none" />
 
-        <motion.button
-          whileHover={{
-            scale: 1.1,
-          }}
-          whileTap={{
-            scale: 0.95,
-          }}
-          onClick={handleCheckIn}
-          disabled={isCheckingIn}
-          className="relative w-16 h-16 rounded-full bg-gradient-to-br from-neon-cyan to-neon-blue flex items-center justify-center shadow-[0_0_20px_rgba(6,255,212,0.4)] border-2 border-white/20 z-10 overflow-hidden group"
-        >
-          <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-full" />
+        {/* Pulse dot */}
+        {/* <span className="relative flex h-2.5 w-2.5 shrink-0">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-cyan opacity-75" />
+          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-neon-cyan" />
+        </span> */}
 
-          {isCheckingIn ? (
-            <Loader2 className="w-8 h-8 text-bg-primary animate-spin" />
-          ) : (
-            <MapPin className="w-8 h-8 text-bg-primary fill-bg-primary" />
-          )}
-        </motion.button>
+        {isCheckingIn ? (
+          <>
+            <Loader2 size={16} className="animate-spin shrink-0" />
+            <span className="text-sm font-bold tracking-widest uppercase font-display">
+              Locating…
+            </span>
+          </>
+        ) : (
+          <>
+            <Navigation size={16} className="shrink-0" />
+            {/* <span className="text-sm font-bold tracking-widest uppercase font-display">
+              Check In
+            </span> */}
+          </>
+        )}
+      </motion.button>
 
-        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
-          <span className="text-[10px] font-bold tracking-widest text-neon-cyan uppercase bg-black/50 px-2 py-0.5 rounded backdrop-blur-sm">
-            Check In
-          </span>
-        </div>
-      </div>
-
-      {/* Toast Notification */}
+      {/* Toast */}
       <AnimatePresence>
         {showToast && (
           <motion.div
             initial={{
               opacity: 0,
-              y: 50,
-              x: "-50%",
+              y: 16,
             }}
             animate={{
               opacity: 1,
               y: 0,
-              x: "-50%",
             }}
             exit={{
               opacity: 0,
-              y: 20,
-              x: "-50%",
+              y: 8,
             }}
-            className="fixed bottom-28 left-1/2 md:left-auto md:right-8 md:translate-x-0 z-50"
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100]"
           >
-            <div className="glass-panel px-6 py-4 rounded-lg border-l-4 border-neon-cyan flex items-center gap-3 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-              <div className="bg-neon-cyan/20 p-2 rounded-full">
-                <MapPin className="w-5 h-5 text-neon-cyan" />
+            <div className="glass-panel px-5 py-3 rounded-xl border-l-4 border-neon-cyan flex items-center gap-3 shadow-[0_0_30px_rgba(0,0,0,0.6)]">
+              <div className="bg-neon-cyan/20 p-1.5 rounded-full">
+                <MapPin className="w-4 h-4 text-neon-cyan" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-white">
+                <p className="text-xs font-bold text-white">
                   Location Verified
-                </h4>
-                <p className="text-xs text-gray-300">
+                </p>
+                <p className="text-[11px] text-gray-400">
                   Checked in at{" "}
                   <span className="text-neon-cyan">{location}</span>
                 </p>

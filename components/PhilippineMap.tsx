@@ -10,6 +10,7 @@ import { MapPin, Minus, Plus, Undo2 } from "lucide-react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import { mapRegions } from "../data/philippinesData";
 import { ProvinceModal } from "./Modal/ProvinceModal";
+import { CheckInButton } from "./CheckInButton";
 
 // --- Optimized Map Content (Memoized) ---
 const MapContent = memo(
@@ -145,6 +146,7 @@ export function PhilippinesMap() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  cursor: "grab",
                 }}
               >
                 <div className="relative w-full max-w-[440px]">
@@ -155,6 +157,18 @@ export function PhilippinesMap() {
                   />
                 </div>
               </TransformComponent>
+
+              {/* Right side: Check-In + hint */}
+              <div className="absolute top-64 right-5">
+                <div className="flex flex-col gap-4 flex-1 min-w-0">
+                  <div className="flex items-end flex-col gap-2">
+                    <p className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">
+                      Current Location
+                    </p>
+                    <CheckInButton />
+                  </div>
+                </div>
+              </div>
             </>
           )}
         </TransformWrapper>

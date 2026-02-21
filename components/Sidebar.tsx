@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { User, Map, Award, Settings, LogOut, Star } from "lucide-react";
+import { User, Map, Award, Settings, LogOut, Star, MapPin } from "lucide-react";
 import { userData, achievements } from "../data/philippinesData";
 import { AchievementBadge } from "./AchievementBadge";
 export function Sidebar() {
@@ -107,6 +107,21 @@ export function Sidebar() {
               size="sm"
             />
           ))}
+        </div>
+      </div>
+
+      {/* Hint card */}
+      <div className=" rounded-xl p-4  flex flex-col items-center text-center gap-3 my-5">
+        <div className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center">
+          <MapPin size={16} className="text-gray-600" />
+        </div>
+        <div>
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+            Select a Province
+          </p>
+          <p className="text-[11px] text-gray-600 mt-1 leading-relaxed">
+            Click any region on the map to view visit details
+          </p>
         </div>
       </div>
 
