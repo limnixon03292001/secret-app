@@ -110,7 +110,7 @@ export function PhilippinesMap() {
   }, []);
 
   const activeRegion = mapRegions.find((r) => r.id === hoveredRegion);
-
+  console.log("length", -mapRegions.length);
   return (
     <>
       {/* Province Detail Modal — renders above everything */}

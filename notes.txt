@@ -4,6 +4,17 @@
 
 tasks for tomorrow
 - clean up code on maps
-- integrate panning movements
-- make map responsive
 - add the api call on check in function
+
+
+
+login npm dependencies
+
+@node-rs/argon2
+@prisma/client
+better-auth
+nodemailer
+
+
+
+prisma
