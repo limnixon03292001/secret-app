@@ -28,3 +28,5 @@ export const auth = betterAuth({
     // },
   },
 });
+
+export type ErrorCodes = keyof typeof auth.$ERROR_CODES | "UNKNOWN";

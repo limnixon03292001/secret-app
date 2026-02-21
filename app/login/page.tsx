@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Navigation,
@@ -16,9 +17,14 @@ import {
   Shield,
 } from "lucide-react";
 import { mapRegions } from "@/data/philippinesData";
+import LoginForm from "@/components/LoginForm";
+import { signUpEmailAction } from "../action";
+import { toast } from "sonner";
+
 interface AuthPageProps {
   onAuthSuccess: () => void;
 }
+
 type Tab = "signin" | "signup";
 
 export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
@@ -26,26 +32,45 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+
+  // const handleSubmit = (e: React.SubmitEvent) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //     onAuthSuccess();
+  //   }, 1800);
+  // };
+
+  async function handleRegisterSubmit(event: FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
+
     setIsLoading(true);
-    setTimeout(() => {
+
+    const formData = new FormData(event?.target as HTMLFormElement);
+
+    //check if the password and confirmPassword matched.
+
+    const password = String(formData.get("password"));
+    const confirmPassword = String(formData.get("confirmPassword"));
+
+    if (password !== confirmPassword) {
       setIsLoading(false);
-      onAuthSuccess();
-    }, 1800);
-  };
-  const handleInput = (field: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+      return toast.error("Your password doesn't match!");
+    }
+
+    const { error } = await signUpEmailAction(formData);
+
+    if (error) {
+      toast.error(error);
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
+      toast.success("Registration complete! Please verify your email.");
+      setActiveTab("signin");
+    }
+  }
+
   return (
     <div className="min-h-screen w-full bg-bg-primary flex overflow-hidden relative">
       {/* Animated background */}
@@ -67,6 +92,7 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
           }}
         />
       </div>
+
       <style>{`
         @keyframes scan {
           0% { top: 0%; opacity: 0; }
@@ -164,6 +190,7 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
               Philippines
             </span>
           </h1>
+
           <p className="text-gray-400 text-center text-sm leading-relaxed max-w-xs">
             Track your travels, compete with explorers nationwide, and unlock
             achievements as you discover all 82 provinces.
@@ -197,7 +224,7 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
         </div>
 
         {/* Bottom stat strip */}
-        <div className="relative z-10 p-10 flex gap-8">
+        {/* <div className="relative z-10 p-10 flex gap-8">
           {[
             {
               value: "12,400+",
@@ -221,7 +248,7 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
 
       {/* ── RIGHT PANEL ── */}
@@ -238,7 +265,7 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
           transition={{
             duration: 0.5,
           }}
-          className="w-full max-w-[420px]"
+          className="w-full max-w-105"
         >
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-2 mb-8 justify-center">
@@ -273,7 +300,7 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
                   {activeTab === tab && (
                     <motion.div
                       layoutId="tab-indicator"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-neon-blue to-neon-cyan"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-linear-to-r from-neon-blue to-neon-cyan"
                       style={{
                         boxShadow: "0 0 8px rgba(0,212,255,0.6)",
                       }}
@@ -285,303 +312,20 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
 
             {/* Form area */}
             <div className="p-8">
-              <AnimatePresence mode="wait">
-                <motion.form
-                  key={activeTab}
-                  initial={{
-                    opacity: 0,
-                    x: activeTab === "signin" ? -16 : 16,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    x: 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    x: activeTab === "signin" ? 16 : -16,
-                  }}
-                  transition={{
-                    duration: 0.22,
-                  }}
-                  onSubmit={handleSubmit}
-                  className="space-y-4"
-                >
-                  <div className="mb-6">
-                    <h2 className="text-xl font-display font-bold text-white">
-                      {activeTab === "signin"
-                        ? "Welcome back"
-                        : "Join the expedition"}
-                    </h2>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {activeTab === "signin"
-                        ? "Sign in to continue your journey"
-                        : "Create your explorer account"}
-                    </p>
-                  </div>
-
-                  {/* Username (sign up only) */}
-                  {activeTab === "signup" && (
-                    <motion.div
-                      initial={{
-                        opacity: 0,
-                        height: 0,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        height: "auto",
-                      }}
-                      exit={{
-                        opacity: 0,
-                        height: 0,
-                      }}
-                    >
-                      <InputField
-                        icon={<User size={15} />}
-                        type="text"
-                        placeholder="Explorer username"
-                        value={formData.username}
-                        onChange={(v) => handleInput("username", v)}
-                        required
-                      />
-                    </motion.div>
-                  )}
-
-                  {/* Email */}
-                  <InputField
-                    icon={<Mail size={15} />}
-                    type="email"
-                    placeholder="Email address"
-                    value={formData.email}
-                    onChange={(v) => handleInput("email", v)}
-                    required
-                  />
-
-                  {/* Password */}
-                  <InputField
-                    icon={<Lock size={15} />}
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={(v) => handleInput("password", v)}
-                    required
-                    suffix={
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword((p) => !p)}
-                        className="text-gray-500 hover:text-gray-300 transition-colors"
-                      >
-                        {showPassword ? (
-                          <EyeOff size={15} />
-                        ) : (
-                          <Eye size={15} />
-                        )}
-                      </button>
-                    }
-                  />
-
-                  {/* Confirm Password (sign up only) */}
-                  {activeTab === "signup" && (
-                    <motion.div
-                      initial={{
-                        opacity: 0,
-                        height: 0,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        height: "auto",
-                      }}
-                      exit={{
-                        opacity: 0,
-                        height: 0,
-                      }}
-                    >
-                      <InputField
-                        icon={<Lock size={15} />}
-                        type={showConfirmPassword ? "text" : "password"}
-                        placeholder="Confirm password"
-                        value={formData.confirmPassword}
-                        onChange={(v) => handleInput("confirmPassword", v)}
-                        required
-                        suffix={
-                          <button
-                            type="button"
-                            onClick={() => setShowConfirmPassword((p) => !p)}
-                            className="text-gray-500 hover:text-gray-300 transition-colors"
-                          >
-                            {showConfirmPassword ? (
-                              <EyeOff size={15} />
-                            ) : (
-                              <Eye size={15} />
-                            )}
-                          </button>
-                        }
-                      />
-                    </motion.div>
-                  )}
-
-                  {/* Forgot password (sign in only) */}
-                  {activeTab === "signin" && (
-                    <div className="flex justify-end">
-                      <button
-                        type="button"
-                        className="text-xs text-neon-blue hover:text-neon-cyan transition-colors"
-                      >
-                        Forgot password?
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Submit */}
-                  <motion.button
-                    whileHover={{
-                      scale: 1.02,
-                    }}
-                    whileTap={{
-                      scale: 0.98,
-                    }}
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full py-3.5 rounded-xl font-display font-bold text-sm uppercase tracking-widest text-bg-primary flex items-center justify-center gap-2 relative overflow-hidden disabled:opacity-70 transition-all duration-300"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%)",
-                      boxShadow: isLoading
-                        ? "none"
-                        : "0 0 20px rgba(0,212,255,0.3), 0 0 40px rgba(139,92,246,0.2)",
-                    }}
-                  >
-                    <div className="absolute inset-0 bg-white/10 translate-x-[-100%] hover:translate-x-[100%] transition-transform duration-700 skew-x-12 pointer-events-none" />
-                    {isLoading ? (
-                      <>
-                        <Loader2 size={16} className="animate-spin" />
-                        <span>
-                          {activeTab === "signin"
-                            ? "Signing in…"
-                            : "Creating account…"}
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <span>
-                          {activeTab === "signin"
-                            ? "Sign In"
-                            : "Create Account"}
-                        </span>
-                        <ArrowRight size={16} />
-                      </>
-                    )}
-                  </motion.button>
-
-                  {/* Divider */}
-                  <div className="flex items-center gap-3 my-2">
-                    <div className="flex-1 h-px bg-white/5" />
-                    <span className="text-[11px] text-gray-600 uppercase tracking-widest">
-                      or
-                    </span>
-                    <div className="flex-1 h-px bg-white/5" />
-                  </div>
-
-                  {/* Social buttons */}
-                  <div className="grid grid-cols-2 gap-3">
-                    {[
-                      {
-                        label: "Google",
-                        color: "rgba(234,67,53,0.15)",
-                        border: "rgba(234,67,53,0.2)",
-                      },
-                      {
-                        label: "Facebook",
-                        color: "rgba(24,119,242,0.15)",
-                        border: "rgba(24,119,242,0.2)",
-                      },
-                    ].map((s) => (
-                      <button
-                        key={s.label}
-                        type="button"
-                        className="py-2.5 rounded-xl text-xs font-bold text-gray-400 hover:text-white transition-colors border"
-                        style={{
-                          background: s.color,
-                          borderColor: s.border,
-                        }}
-                      >
-                        {s.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Switch tab link */}
-                  <p className="text-center text-xs text-gray-600 pt-2">
-                    {activeTab === "signin"
-                      ? "Don't have an account? "
-                      : "Already an explorer? "}
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setActiveTab(
-                          activeTab === "signin" ? "signup" : "signin",
-                        )
-                      }
-                      className="text-neon-cyan hover:text-white transition-colors font-bold"
-                    >
-                      {activeTab === "signin" ? "Sign Up" : "Sign In"}
-                    </button>
-                  </p>
-                </motion.form>
-              </AnimatePresence>
+              <LoginForm
+                activeTab={activeTab}
+                isLoading={isLoading}
+                showPassword={showPassword}
+                showConfirmPassword={showConfirmPassword}
+                setActiveTab={setActiveTab}
+                setShowPassword={setShowPassword}
+                setShowConfirmPassword={setShowConfirmPassword}
+                handleRegisterSubmit={handleRegisterSubmit}
+              />
             </div>
           </div>
         </motion.div>
       </div>
-    </div>
-  );
-}
-// ── Reusable Input Field ──
-interface InputFieldProps {
-  icon: React.ReactNode;
-  type: string;
-  placeholder: string;
-  value: string;
-  onChange: (v: string) => void;
-  required?: boolean;
-  suffix?: React.ReactNode;
-}
-function InputField({
-  icon,
-  type,
-  placeholder,
-  value,
-  onChange,
-  required,
-  suffix,
-}: InputFieldProps) {
-  const [focused, setFocused] = useState(false);
-  return (
-    <div
-      className="flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-200"
-      style={{
-        background: "rgba(255,255,255,0.03)",
-        borderColor: focused ? "rgba(0,212,255,0.4)" : "rgba(255,255,255,0.06)",
-        boxShadow: focused
-          ? "0 0 0 1px rgba(0,212,255,0.1), 0 0 12px rgba(0,212,255,0.05)"
-          : "none",
-      }}
-    >
-      <span
-        className={`shrink-0 transition-colors duration-200 ${focused ? "text-neon-cyan" : "text-gray-600"}`}
-      >
-        {icon}
-      </span>
-      <input
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        required={required}
-        className="flex-1 bg-transparent text-sm text-white placeholder-gray-600 outline-none font-sans"
-      />
-      {suffix && <span className="shrink-0">{suffix}</span>}
     </div>
   );
 }
