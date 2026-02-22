@@ -11,7 +11,9 @@ pending tasks
 - protect routes // done
 - validate session on main page // done
 
--reset password
+-reset password // done
+
+integrate oauth google
 
 
 

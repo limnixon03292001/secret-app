@@ -1,29 +1,35 @@
 "use client";
 
-import InputField from "./InputField";
-import type { FormEvent } from "react";
-import { ArrowRight, Loader2, Mail } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { sendVerificationEmail } from "@/lib/auth-client";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import ReturnBtn from "./ReturnBtn";
-import { SPProps } from "@/types/SearchParams_Type";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import InputField from "./InputField";
+import { ArrowRight, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
+import { toast } from "sonner";
+import { resetPassword } from "@/lib/auth-client";
 
-export default function SendEmailVerification({ sp }: SPProps) {
+export default function ResetPasswordForm({ token }: { token: string }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  async function handleVerificationLink(event: FormEvent<HTMLFormElement>) {
+  async function handleResetPassword(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     const formData = new FormData(event.target as HTMLFormElement);
-    const email = String(formData.get("email"));
+    const password = String(formData.get("password"));
+    const confirmPassword = String(formData.get("confirmPassword"));
 
-    await sendVerificationEmail({
-      email,
-      callbackURL: "/auth/verify",
+    if (!password) toast.error("Please enter your password.");
+
+    if (password !== confirmPassword) {
+      return toast.error("Password do not match.");
+    }
+
+    await resetPassword({
+      newPassword: password,
+      token: token,
       fetchOptions: {
         onRequest: () => {
           setIsLoading(true);
@@ -35,9 +41,8 @@ export default function SendEmailVerification({ sp }: SPProps) {
           toast.error(ctx.error.message);
         },
         onSuccess: () => {
-          toast.success(
-            "The verification link has been sent successfully. Please check your email and follow the instructions to verify your account.",
-          );
+          toast.success("Password reset successfully!");
+          router.push("/auth/login");
         },
       },
     });
@@ -47,17 +52,13 @@ export default function SendEmailVerification({ sp }: SPProps) {
     <div className="w-full p-5 max-w-125">
       <ReturnBtn href="/auth/login" label="Login" />
       <h1 className="text-2xl font-display font-bold text-white leading-tight mb-4">
-        Verify your Email
+        Reset Your Password
       </h1>
       <p className="text-gray-400 text-sm leading-relaxed max-w-full mb-4">
-        {sp.error === "invalid_token" || sp.error === "token_expired"
-          ? "The verification link has expired. No worries — we can resend a new verification link. Please enter your email address below."
-          : sp.error === "email_not_verified"
-            ? "Your account email has not been verified yet. Please enter your email address, and we will send you a verification link. After verifying your email, you may proceed to log in."
-            : "Oops! Something went wrong. Please try again."}
+        Enter your new Password
       </p>
       <motion.form
-        onSubmit={handleVerificationLink}
+        onSubmit={handleResetPassword}
         initial={{
           opacity: 0,
           x: 16,
@@ -76,11 +77,37 @@ export default function SendEmailVerification({ sp }: SPProps) {
         className="space-y-4"
       >
         <InputField
-          icon={<Mail size={15} />}
-          type="email"
-          placeholder="Email address"
+          icon={<Lock size={15} />}
+          type={showPassword ? "text" : "password"}
+          placeholder="Password"
           required
-          nameId="email"
+          suffix={
+            <button
+              type="button"
+              onClick={() => setShowPassword((p: boolean) => !p)}
+              className="text-gray-500 hover:text-gray-300 transition-colors"
+            >
+              {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+            </button>
+          }
+          nameId="password"
+        />
+
+        <InputField
+          icon={<Lock size={15} />}
+          type={showConfirmPassword ? "text" : "password"}
+          placeholder="Confirm password"
+          required
+          suffix={
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((p: boolean) => !p)}
+              className="text-gray-500 hover:text-gray-300 transition-colors"
+            >
+              {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+            </button>
+          }
+          nameId="confirmPassword"
         />
 
         <motion.button
@@ -104,11 +131,10 @@ export default function SendEmailVerification({ sp }: SPProps) {
           {isLoading ? (
             <>
               <Loader2 size={16} className="animate-spin" />
-              <span>Sending verification link...</span>
             </>
           ) : (
             <>
-              <span>Send verification link</span>
+              <span>Request password</span>
               <ArrowRight size={16} />
             </>
           )}

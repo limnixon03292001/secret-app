@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import InputField from "./InputField";
+import Link from "next/link";
 
 export default function LoginForm({
   activeTab,
@@ -157,7 +158,12 @@ export default function LoginForm({
               type="button"
               className="text-xs text-neon-blue hover:text-neon-cyan transition-colors"
             >
-              Forgot password?
+              <Link
+                href="/auth/forgot-password"
+                className="flex items-center gap-1 underline"
+              >
+                Forgot password?
+              </Link>
             </button>
           </div>
         )}
@@ -208,17 +214,12 @@ export default function LoginForm({
         </div>
 
         {/* Social buttons */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3">
           {[
             {
               label: "Google",
               color: "rgba(234,67,53,0.15)",
               border: "rgba(234,67,53,0.2)",
-            },
-            {
-              label: "Facebook",
-              color: "rgba(24,119,242,0.15)",
-              border: "rgba(24,119,242,0.2)",
             },
           ].map((s) => (
             <button

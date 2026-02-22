@@ -115,8 +115,9 @@ export async function sendEmailAction({
     from: process.env.NODEMAILER_USER,
     to,
     subject: `${subject} - PH TRACKER`,
-    html: `
-       <div style="width:100%;background-color:#f5f5f5;padding:40px 20px;
+    html:
+      subject !== "Reset Your Password"
+        ? `<div style="width:100%;background-color:#f5f5f5;padding:40px 20px;
     font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
@@ -149,7 +150,7 @@ export async function sendEmailAction({
               <td style="padding-bottom:24px;">
                 <h1 style="margin:0;font-size:32px;font-weight:700;
                   color:white;line-height:1.2;">
-                  Verify Your Email
+                  ${subject}
                 </h1>
               </td>
             </tr>
@@ -206,7 +207,123 @@ export async function sendEmailAction({
                 border-radius:6px;border-left:3px solid #00D9FF;">
                 <p style="margin:0;font-size:14px;line-height:1.6;color:#B8C5D6;">
                   <strong style="color:#00D9FF;">Note:</strong>
-                  This verification link will expire in 24 hours.
+                  This verification link will expire in 1 hour.
+                  If you didn't create an account with PHTRACKER,
+                  you can safely ignore this email.
+                </p>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+
+      <!-- Footer -->
+      <tr>
+        <td style="padding:32px 40px;
+          border-top:1px solid rgba(255,255,255,0.1);">
+
+          <p style="margin:0 0 16px 0;font-size:14px;
+            line-height:1.6;color:#7B8A9E;text-align:center;">
+            Need help? Contact us at
+            <a href="mailto:itonski29@gmail.com"
+              style="color:#00D9FF;text-decoration:none;">
+              itonski29@gmail.com
+            </a>
+          </p>
+
+          <p style="margin:0;font-size:12px;
+            line-height:1.6;color:#5A6B7F;text-align:center;">
+            © 2026 PHTRACKER. All rights reserved.<br/>
+            Track your travels across all 82 provinces of the Philippines.
+          </p>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+    `
+        : `<div style="width:100%;background-color:#f5f5f5;padding:40px 20px;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+      style="max-width:600px;margin:0 auto;background-color:#0A1628;
+      border-radius:8px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+
+      <!-- Header -->
+      <tr>
+        <td style="padding:40px 40px 30px;">
+          <table role="presentation" width="100%">
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div style="font-size:24px;font-weight:700;color:white;letter-spacing:0.5px;">
+                    PH<span style="color:#00D9FF;">TRACKER</span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Main Content -->
+      <tr>
+        <td style="padding:0 40px 40px;">
+          <table role="presentation" width="100%">
+
+            <tr>
+              <td style="padding-bottom:24px;">
+                <h1 style="margin:0;font-size:32px;font-weight:700;
+                  color:white;line-height:1.2;">
+                  ${subject}
+                </h1>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding-bottom:32px;">
+                <p style="margin:0;font-size:16px;line-height:1.6;color:#B8C5D6;">
+                 To reset your password, click the button below.
+                </p>
+              </td>
+            </tr>
+
+            <!-- CTA Button -->
+            <tr>
+              <td style="padding-bottom:24px;">
+                <a href="${meta.link}"
+                  style="display:inline-block;padding:16px 48px;
+                  background:linear-gradient(135deg,#00D9FF 0%,#7B61FF 100%);
+                  color:white;font-size:16px;font-weight:600;
+                  text-decoration:none;border-radius:8px;
+                  text-align:center;letter-spacing:0.5px;">
+                  Reset Password
+                </a>
+              </td>
+            </tr>
+
+            <!-- Alternative Link -->
+            <tr>
+              <td style="padding-bottom:32px;">
+                <p style="margin:0;font-size:14px;line-height:1.6;color:#7B8A9E;">
+                  Or copy and paste this link into your browser:
+                </p>
+                <a href="${meta.link}"
+                  style="display:block;margin-top:8px;font-size:14px;
+                  color:#00D9FF;text-decoration:none;word-break:break-all;">
+                  ${meta.link}
+                </a>
+              </td>
+            </tr>
+
+            <!-- Expiration Notice -->
+            <tr>
+              <td style="padding:24px;background-color:rgba(0,217,255,0.1);
+                border-radius:6px;border-left:3px solid #00D9FF;">
+                <p style="margin:0;font-size:14px;line-height:1.6;color:#B8C5D6;">
+                  <strong style="color:#00D9FF;">Note:</strong>
+                  This link will expire in 1 hour
                   If you didn't create an account with PHTRACKER,
                   you can safely ignore this email.
                 </p>

@@ -3,19 +3,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Navigation,
-  Mail,
-  Lock,
-  User,
-  Eye,
-  EyeOff,
-  ArrowRight,
-  Loader2,
-  MapPin,
-  Compass,
-  Shield,
-} from "lucide-react";
+import { Navigation, MapPin, Compass, Shield } from "lucide-react";
 import { mapRegions } from "@/data/philippinesData";
 import LoginForm from "@/components/LoginForm";
 import { signInEmailAction, signUpEmailAction } from "../../action";
@@ -68,7 +56,9 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
       toast.error(error);
     } else {
       setIsLoading(false);
-      toast.success("Registration complete! Please verify your email.");
+      toast.success(
+        "Your registration is complete. Please check your email for the verification link to activate your account.",
+      );
       setActiveTab("signin");
     }
   }

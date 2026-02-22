@@ -1,11 +1,8 @@
 import SendEmailVerification from "@/components/SendEmailVerification";
+import { SearchParamProps } from "@/types/SearchParams_Type";
 import { redirect } from "next/navigation";
 
-type VerifyPageProps = {
-  searchParams: Promise<{ error: string }>;
-};
-
-export default async function VerifyPage({ searchParams }: VerifyPageProps) {
+export default async function VerifyPage({ searchParams }: SearchParamProps) {
   const sp = await searchParams;
 
   // if no error, redirect to the main page

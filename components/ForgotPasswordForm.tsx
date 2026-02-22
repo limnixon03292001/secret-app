@@ -1,29 +1,30 @@
 "use client";
 
+import React, { useState } from "react";
+import ReturnBtn from "./ReturnBtn";
 import InputField from "./InputField";
-import type { FormEvent } from "react";
-import { ArrowRight, Loader2, Mail } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { sendVerificationEmail } from "@/lib/auth-client";
+import { ArrowRight, Loader2, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import ReturnBtn from "./ReturnBtn";
+import { requestPasswordReset } from "@/lib/auth-client";
 import { SPProps } from "@/types/SearchParams_Type";
 
-export default function SendEmailVerification({ sp }: SPProps) {
+export default function ForgotPasswordForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  async function handleVerificationLink(event: FormEvent<HTMLFormElement>) {
+  async function handleResetPassword(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const formData = new FormData(event.target as HTMLFormElement);
     const email = String(formData.get("email"));
 
-    await sendVerificationEmail({
+    if (!email) toast.error("Please enter your email.");
+
+    await requestPasswordReset({
       email,
-      callbackURL: "/auth/verify",
+      redirectTo: "/auth/reset-password",
       fetchOptions: {
         onRequest: () => {
           setIsLoading(true);
@@ -36,8 +37,9 @@ export default function SendEmailVerification({ sp }: SPProps) {
         },
         onSuccess: () => {
           toast.success(
-            "The verification link has been sent successfully. Please check your email and follow the instructions to verify your account.",
+            "Reset link sent to your email. Please check your email.",
           );
+          router.push("/auth/login");
         },
       },
     });
@@ -47,17 +49,14 @@ export default function SendEmailVerification({ sp }: SPProps) {
     <div className="w-full p-5 max-w-125">
       <ReturnBtn href="/auth/login" label="Login" />
       <h1 className="text-2xl font-display font-bold text-white leading-tight mb-4">
-        Verify your Email
+        Reset Your Password
       </h1>
       <p className="text-gray-400 text-sm leading-relaxed max-w-full mb-4">
-        {sp.error === "invalid_token" || sp.error === "token_expired"
-          ? "The verification link has expired. No worries — we can resend a new verification link. Please enter your email address below."
-          : sp.error === "email_not_verified"
-            ? "Your account email has not been verified yet. Please enter your email address, and we will send you a verification link. After verifying your email, you may proceed to log in."
-            : "Oops! Something went wrong. Please try again."}
+        Please enter the email address you'd like your password reset
+        information sent to
       </p>
       <motion.form
-        onSubmit={handleVerificationLink}
+        onSubmit={handleResetPassword}
         initial={{
           opacity: 0,
           x: 16,
@@ -104,11 +103,11 @@ export default function SendEmailVerification({ sp }: SPProps) {
           {isLoading ? (
             <>
               <Loader2 size={16} className="animate-spin" />
-              <span>Sending verification link...</span>
+              <span>Requesting...</span>
             </>
           ) : (
             <>
-              <span>Send verification link</span>
+              <span>Request reset link</span>
               <ArrowRight size={16} />
             </>
           )}
