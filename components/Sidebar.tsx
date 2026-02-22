@@ -4,10 +4,42 @@ import { motion } from "framer-motion";
 import { User, Map, Award, Settings, LogOut, Star, MapPin } from "lucide-react";
 import { userData, achievements } from "../data/philippinesData";
 import { AchievementBadge } from "./AchievementBadge";
+import { useSession } from "@/components/Context/SessionContext";
+import { useEffect, useState } from "react";
+import { signOut } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
 export function Sidebar() {
+  // const [isLoading, setIsLoading] = useState<boolean>();
+  const { session } = useSession();
+  const router = useRouter();
+
   const progressPercentage = Math.round(
     (userData.provincesVisited / userData.totalProvinces) * 100,
   );
+
+  async function handleLogout() {
+    await signOut({
+      fetchOptions: {
+        onRequest: () => {
+          toast.success("Logging out, please wait…");
+          // setIsLoading(true);
+        },
+        onResponse: () => {
+          // setIsLoading(false);
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message);
+        },
+        onSuccess: () => {
+          toast.success("You've logged out.");
+          router.push("/auth/login");
+        },
+      },
+    });
+  }
+
   return (
     <aside className="h-full flex flex-col glass-panel border-r border-white/5 overflow-hidden">
       {/* Profile Header */}
@@ -16,11 +48,21 @@ export function Sidebar() {
 
         <div className="relative mb-4 group">
           <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-neon-cyan to-neon-purple animate-spin-slow blur-md opacity-70 group-hover:opacity-100 transition-opacity" />
-          <img
-            src={userData.avatar}
-            alt="Profile"
-            className="relative w-24 h-24 rounded-full border-2 border-white/20 object-cover z-10"
-          />
+
+          {session.user.image ? (
+            <img
+              src={session.user.image}
+              alt="Profile"
+              className="relative w-24 h-24 rounded-full border-2 border-white/20 object-cover z-10"
+            />
+          ) : (
+            <div className="relative w-24 h-24 rounded-full border-2 border-white/20 object-cover z-10 flex items-center justify-center">
+              <span className="uppercase text-3xl font-bold">
+                {session.user.name.slice(0, 2)}
+              </span>
+            </div>
+          )}
+
           {/* <div className="absolute -bottom-2 -right-2 z-20 bg-black rounded-full p-1 border border-neon-yellow">
             <div className="bg-yellow-500 rounded-full p-1">
               <Star size={12} className="text-black fill-black" />
@@ -29,7 +71,7 @@ export function Sidebar() {
         </div>
 
         <h2 className="text-xl font-display font-bold text-white tracking-wide">
-          {userData.username}
+          {session.user.name}
         </h2>
         {/* <div className="flex items-center gap-2 mt-1">
           <span className="text-xs font-bold text-neon-cyan uppercase tracking-wider px-2 py-0.5 rounded bg-neon-cyan/10 border border-neon-cyan/20">
@@ -137,7 +179,10 @@ export function Sidebar() {
           <button className="p-2 hover:text-neon-purple hover:bg-white/5 rounded-lg transition-colors">
             <Settings size={20} />
           </button>
-          <button className="p-2 hover:text-red-400 hover:bg-white/5 rounded-lg transition-colors">
+          <button
+            onClick={handleLogout}
+            className="p-2 hover:text-red-400 hover:bg-white/5 rounded-lg transition-colors"
+          >
             <LogOut size={20} />
           </button>
         </nav>

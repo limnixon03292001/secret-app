@@ -13,7 +13,7 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
 
   return (
     <div className="min-h-screen w-full bg-bg-primary flex items-center justify-center overflow-hidden relative">
-      <SendEmailVerification />
+      <SendEmailVerification sp={sp} />
     </div>
   );
 }

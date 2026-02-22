@@ -8,4 +8,4 @@ const authClient = createAuthClient({
   plugins: [inferAdditionalFields<typeof auth>()],
 });
 
-export const { sendVerificationEmail } = authClient;
+export const { sendVerificationEmail, signOut } = authClient;

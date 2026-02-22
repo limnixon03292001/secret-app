@@ -10,7 +10,15 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ReturnBtn from "./ReturnBtn";
 
-export default function SendEmailVerification() {
+type SendEmailVerificationProp = {
+  sp: {
+    [key: string]: string | string[] | undefined;
+  };
+};
+
+export default function SendEmailVerification({
+  sp,
+}: SendEmailVerificationProp) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
@@ -49,9 +57,11 @@ export default function SendEmailVerification() {
         Verify your Email
       </h1>
       <p className="text-gray-400 text-sm leading-relaxed max-w-full mb-4">
-        Your account email has not been verified yet. Please enter your email
-        address, and we will send you a verification link. After verifying your
-        email, you may proceed to log in.
+        {sp.error === "invalid_token" || sp.error === "token_expired"
+          ? "The verification link has expired. No worries — we can resend a new verification link. Please enter your email address below."
+          : sp.error === "email_not_verified"
+            ? "Your account email has not been verified yet. Please enter your email address, and we will send you a verification link. After verifying your email, you may proceed to log in."
+            : "Oops! Something went wrong. Please try again."}
       </p>
       <motion.form
         onSubmit={handleVerificationLink}

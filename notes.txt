@@ -8,11 +8,11 @@ tasks for tomorrow
 
 
 pending tasks
-- protect routes
-- validate session on main page
+- protect routes // done
+- validate session on main page // done
 
 -reset password
-- add hooks for email, if the user entered a correct email
+
 
 
 

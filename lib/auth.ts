@@ -4,6 +4,8 @@ import { prisma } from "./prisma";
 import { hashPassword, verifyPassword } from "@/lib/argon2";
 import { sendEmailAction } from "@/app/action";
 import { nextCookies } from "better-auth/next-js";
+import { createAuthMiddleware } from "better-auth/api";
+import { normalizeName } from "./utils";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -56,6 +58,24 @@ export const auth = betterAuth({
         },
       });
     },
+  },
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      if (ctx.path === "/sign-up/email") {
+        //remove special characters, spaces etc
+        const name = normalizeName(ctx.body.name);
+
+        return {
+          context: {
+            ...ctx,
+            body: {
+              ...ctx.body,
+              name,
+            },
+          },
+        };
+      }
+    }),
   },
   plugins: [nextCookies()],
 });
