@@ -2,11 +2,23 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
 import { hashPassword, verifyPassword } from "@/lib/argon2";
+import { sendEmailAction } from "@/app/action";
+import { nextCookies } from "better-auth/next-js";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+  session: {
+    // 1 hour session
+    expiresIn: 60 * 60,
+    // Setting this to 30 mins means if they act within that time,  the 1-hour timer resets.
+    updateAge: 30 * 60,
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60,
+    },
+  },
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 6,
@@ -15,7 +27,7 @@ export const auth = betterAuth({
       hash: hashPassword,
       verify: verifyPassword,
     },
-    // requireEmailVerification: true,
+    requireEmailVerification: true,
     // sendResetPassword: async ({ user, url }) => {
     //     await sendEmailAction({
     //       to: user.email,
@@ -27,6 +39,25 @@ export const auth = betterAuth({
     //     });
     // },
   },
+  emailVerification: {
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      const link = new URL(url);
+      link.searchParams.set("callbackURL", "/auth/verify");
+
+      await sendEmailAction({
+        to: user.email,
+        subject: "Verify Your Email Address",
+        meta: {
+          description:
+            "Please verify your email address to complete registration.",
+          link: String(link),
+        },
+      });
+    },
+  },
+  plugins: [nextCookies()],
 });
 
 export type ErrorCodes = keyof typeof auth.$ERROR_CODES | "UNKNOWN";

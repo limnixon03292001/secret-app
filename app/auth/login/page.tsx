@@ -18,8 +18,9 @@ import {
 } from "lucide-react";
 import { mapRegions } from "@/data/philippinesData";
 import LoginForm from "@/components/LoginForm";
-import { signUpEmailAction } from "../action";
+import { signInEmailAction, signUpEmailAction } from "../../action";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface AuthPageProps {
   onAuthSuccess: () => void;
@@ -32,6 +33,7 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   // const handleSubmit = (e: React.SubmitEvent) => {
   //   e.preventDefault();
@@ -62,12 +64,31 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
     const { error } = await signUpEmailAction(formData);
 
     if (error) {
-      toast.error(error);
       setIsLoading(false);
+      toast.error(error);
     } else {
       setIsLoading(false);
       toast.success("Registration complete! Please verify your email.");
       setActiveTab("signin");
+    }
+  }
+
+  async function handleLoginSubmit(event: FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
+
+    setIsLoading(true);
+
+    const formData = new FormData(event.target as HTMLFormElement);
+
+    const { error } = await signInEmailAction(formData);
+
+    if (error) {
+      setIsLoading(false);
+      toast.error(error);
+    } else {
+      setIsLoading(false);
+      toast.success("Login Successful!");
+      router.push("/");
     }
   }
 
@@ -321,6 +342,7 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
                 setShowPassword={setShowPassword}
                 setShowConfirmPassword={setShowConfirmPassword}
                 handleRegisterSubmit={handleRegisterSubmit}
+                handleLoginSubmit={handleLoginSubmit}
               />
             </div>
           </div>

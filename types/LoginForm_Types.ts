@@ -9,6 +9,7 @@ export interface LoginFormProps {
   setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
   setShowConfirmPassword: React.Dispatch<React.SetStateAction<boolean>>;
   handleRegisterSubmit: SubmitEventHandler<HTMLFormElement>;
+  handleLoginSubmit: SubmitEventHandler<HTMLFormElement>;
 }
 
 export interface InputFieldProps {

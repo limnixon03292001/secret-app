@@ -7,6 +7,14 @@ tasks for tomorrow
 - add the api call on check in function
 
 
+pending tasks
+- protect routes
+- validate session on main page
+
+-reset password
+- add hooks for email, if the user entered a correct email
+
+
 
 login npm dependencies
 
