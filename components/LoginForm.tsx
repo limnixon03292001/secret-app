@@ -23,6 +23,7 @@ export default function LoginForm({
   setShowConfirmPassword,
   handleRegisterSubmit,
   handleLoginSubmit,
+  handleOAuthSubmit,
 }: LoginFormProps) {
   return (
     <AnimatePresence mode="wait">
@@ -223,9 +224,10 @@ export default function LoginForm({
             },
           ].map((s) => (
             <button
+              onClick={handleOAuthSubmit}
               key={s.label}
               type="button"
-              className="py-2.5 rounded-xl text-xs font-bold text-gray-400 hover:text-white transition-colors border"
+              className="py-2.5 rounded-xl text-md font-bold text-gray-400 hover:text-white transition-colors border"
               style={{
                 background: s.color,
                 borderColor: s.border,

@@ -1,4 +1,4 @@
-import { FormEvent, SubmitEventHandler } from "react";
+import { FormEvent, MouseEventHandler, SubmitEventHandler } from "react";
 
 export interface LoginFormProps {
   activeTab: "signin" | "signup";
@@ -10,6 +10,7 @@ export interface LoginFormProps {
   setShowConfirmPassword: React.Dispatch<React.SetStateAction<boolean>>;
   handleRegisterSubmit: SubmitEventHandler<HTMLFormElement>;
   handleLoginSubmit: SubmitEventHandler<HTMLFormElement>;
+  handleOAuthSubmit: MouseEventHandler;
 }
 
 export interface InputFieldProps {

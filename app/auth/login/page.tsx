@@ -9,6 +9,7 @@ import LoginForm from "@/components/LoginForm";
 import { signInEmailAction, signUpEmailAction } from "../../action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { signIn } from "@/lib/auth-client";
 
 interface AuthPageProps {
   onAuthSuccess: () => void;
@@ -22,15 +23,6 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
-  // const handleSubmit = (e: React.SubmitEvent) => {
-  //   e.preventDefault();
-  //   setIsLoading(true);
-  //   setTimeout(() => {
-  //     setIsLoading(false);
-  //     onAuthSuccess();
-  //   }, 1800);
-  // };
 
   async function handleRegisterSubmit(event: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
@@ -80,6 +72,29 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
       toast.success("Login Successful!");
       router.push("/");
     }
+  }
+
+  //signing in/up via client
+  async function handleOAuthSubmit(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+
+    await signIn.social({
+      // default to google, we are only handling google for now
+      provider: "google",
+      callbackURL: "/",
+      errorCallbackURL: "/auth/login/error",
+      fetchOptions: {
+        onRequest: () => {
+          // setIsLoading(true);
+        },
+        onResponse: () => {
+          // setIsLoading(false);
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message);
+        },
+      },
+    });
   }
 
   return (
@@ -333,6 +348,7 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
                 setShowConfirmPassword={setShowConfirmPassword}
                 handleRegisterSubmit={handleRegisterSubmit}
                 handleLoginSubmit={handleLoginSubmit}
+                handleOAuthSubmit={handleOAuthSubmit}
               />
             </div>
           </div>
