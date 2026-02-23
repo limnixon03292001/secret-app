@@ -13,7 +13,7 @@ pending tasks
 
 -reset password // done
 
-integrate oauth google
+integrate oauth google //done
 
 
 

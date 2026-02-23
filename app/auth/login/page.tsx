@@ -148,7 +148,7 @@ export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
               <Navigation size={20} className="text-white" />
             </div>
             <span className="font-display font-bold text-2xl tracking-wider text-white">
-              PH<span className="text-neon-cyan">TRACKER</span>
+              Conquer<span className="text-neon-cyan">PH</span>
             </span>
           </div>
         </div>

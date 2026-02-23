@@ -114,7 +114,7 @@ export async function sendEmailAction({
   const mailOptions = {
     from: process.env.NODEMAILER_USER,
     to,
-    subject: `${subject} - PH TRACKER`,
+    subject: `${subject} - ConquerPH`,
     html:
       subject !== "Reset Your Password"
         ? `<div style="width:100%;background-color:#f5f5f5;padding:40px 20px;
@@ -132,7 +132,7 @@ export async function sendEmailAction({
               <td>
                 <div style="display:flex;align-items:center;gap:12px;">
                   <div style="font-size:24px;font-weight:700;color:white;letter-spacing:0.5px;">
-                    PH<span style="color:#00D9FF;">TRACKER</span>
+                    Conquer<span style="color:#00D9FF;">PH</span>
                   </div>
                 </div>
               </td>
@@ -158,7 +158,7 @@ export async function sendEmailAction({
             <tr>
               <td style="padding-bottom:16px;">
                 <p style="margin:0;font-size:16px;line-height:1.6;color:#B8C5D6;">
-                  Welcome to PHTRACKER! We're excited to have you on board.
+                  Welcome to ConquerPH! We're excited to have you on board.
                 </p>
               </td>
             </tr>
@@ -208,7 +208,7 @@ export async function sendEmailAction({
                 <p style="margin:0;font-size:14px;line-height:1.6;color:#B8C5D6;">
                   <strong style="color:#00D9FF;">Note:</strong>
                   This verification link will expire in 1 hour.
-                  If you didn't create an account with PHTRACKER,
+                  If you didn't create an account with ConquerPH,
                   you can safely ignore this email.
                 </p>
               </td>
@@ -234,7 +234,7 @@ export async function sendEmailAction({
 
           <p style="margin:0;font-size:12px;
             line-height:1.6;color:#5A6B7F;text-align:center;">
-            © 2026 PHTRACKER. All rights reserved.<br/>
+            © 2026 ConquerPH. All rights reserved.<br/>
             Track your travels across all 82 provinces of the Philippines.
           </p>
         </td>
@@ -258,7 +258,7 @@ export async function sendEmailAction({
               <td>
                 <div style="display:flex;align-items:center;gap:12px;">
                   <div style="font-size:24px;font-weight:700;color:white;letter-spacing:0.5px;">
-                    PH<span style="color:#00D9FF;">TRACKER</span>
+                    Conquer<span style="color:#00D9FF;">PH</span>
                   </div>
                 </div>
               </td>
@@ -324,7 +324,7 @@ export async function sendEmailAction({
                 <p style="margin:0;font-size:14px;line-height:1.6;color:#B8C5D6;">
                   <strong style="color:#00D9FF;">Note:</strong>
                   This link will expire in 1 hour
-                  If you didn't create an account with PHTRACKER,
+                  If you didn't create an account with ConquerPH,
                   you can safely ignore this email.
                 </p>
               </td>
@@ -350,7 +350,7 @@ export async function sendEmailAction({
 
           <p style="margin:0;font-size:12px;
             line-height:1.6;color:#5A6B7F;text-align:center;">
-            © 2026 PHTRACKER. All rights reserved.<br/>
+            © 2026 ConquerPH. All rights reserved.<br/>
             Track your travels across all 82 provinces of the Philippines.
           </p>
         </td>
