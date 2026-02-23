@@ -14,15 +14,15 @@ export async function proxy(request: NextRequest) {
 
   const isOnProtectedRoutes = protectedRoutes.includes(nextUrl.pathname);
 
-  const isOnAuthRoutes = nextUrl.pathname.startsWith("/auth");
+  // const isOnAuthRoutes = nextUrl.pathname.startsWith("/auth");
 
   if (isOnProtectedRoutes && !isLoggedIn) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  if (isOnAuthRoutes && isLoggedIn) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
+  // if (isOnAuthRoutes && isLoggedIn) {
+  //   return NextResponse.redirect(new URL("/", request.url));
+  // }
 
   return result;
 }

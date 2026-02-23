@@ -15,11 +15,11 @@ export const auth = betterAuth({
     // 1 hour session
     expiresIn: 60 * 60,
     // Setting this to 30 mins means if they act within that time,  the 1-hour timer resets.
-    updateAge: 30 * 60,
-    cookieCache: {
-      enabled: true,
-      maxAge: 5 * 60,
-    },
+    // updateAge: 30 * 60,
+    // cookieCache: {
+    //   enabled: true,
+    //   maxAge: 5 * 60,
+    // },
   },
   emailAndPassword: {
     enabled: true,
@@ -86,7 +86,7 @@ export const auth = betterAuth({
   },
   account: {
     accountLinking: {
-      enabled: false,
+      enabled: true,
     },
   },
   plugins: [nextCookies()],

@@ -11,13 +11,9 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { signIn } from "@/lib/auth-client";
 
-interface AuthPageProps {
-  onAuthSuccess: () => void;
-}
-
 type Tab = "signin" | "signup";
 
-export default function AuthPage({ onAuthSuccess }: AuthPageProps) {
+export default function AuthPage() {
   const [activeTab, setActiveTab] = useState<Tab>("signin");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
