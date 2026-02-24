@@ -1,5 +1,6 @@
 "use server";
 
+import { mapRegions } from "@/data/philippinesData";
 import { auth, ErrorCodes } from "@/lib/auth";
 import transporter from "@/lib/nodemailer";
 import { APIError } from "better-auth/api";
@@ -368,4 +369,65 @@ export async function sendEmailAction({
     console.error("sendEmailAction", err);
     return { success: false };
   }
+}
+
+export async function checkLocationAction(lat: number, lng: number) {
+  if (!lat || !lng) {
+    throw new Error("Missing coordinates");
+  }
+
+  console.log("server action lat lng", lat, lng);
+
+  const googleApi = await fetch(
+    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.GOOGLE_GEOCODE_API_KEY}`,
+  );
+
+  const data = await googleApi.json();
+
+  if (!data.results.length) {
+    throw new Error(
+      "Unable to determine the location from the provided coordinates.",
+    );
+  }
+
+  const components = data.results[0].address_components;
+
+  const province = components.find((c: any) =>
+    c.types.includes("administrative_area_level_1"),
+  )?.long_name;
+
+  const city = components.find(
+    (c: any) =>
+      c.types.includes("locality") ||
+      c.types.includes("administrative_area_level_2"),
+  )?.long_name;
+
+  // console.log("Province:", province, "City:", city, data.results);
+
+  const addressComponents = data.results[0].address_components.map(
+    (i: { short_name: string }) => i.short_name.toLowerCase(),
+  );
+
+  const result = mapRegions.find((item) => {
+    const lowerTitle = item.title.toLowerCase();
+
+    // const matchesFormatted = data.results[0].address_components.find(
+    //   (i: { short_name: string }) => {
+    //     return i.short_name.toLowerCase().includes(lowerTitle);
+    //   },
+    // );
+
+    const matchesFormatted = addressComponents.some((shortName: string) =>
+      shortName.includes(lowerTitle),
+    );
+    return matchesFormatted;
+  });
+
+  if (result === undefined) {
+    throw new Error(
+      "We’re unable to map your current location in our system. This may be because you’re using a VPN connected to another country or you’re currently outside the country.",
+    );
+  }
+
+  return { filteredResult: result, apiResult: data.results };
 }

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback, memo } from "react";
+import React, { useState, useCallback, memo, useEffect } from "react";
 import {
   motion,
   useMotionValue,
@@ -110,7 +110,10 @@ export function PhilippinesMap() {
   }, []);
 
   const activeRegion = mapRegions.find((r) => r.id === hoveredRegion);
-  console.log("length", -mapRegions.length);
+
+  // const lat = 13.917487;
+  // const lng = 124.277325;
+
   return (
     <>
       {/* Province Detail Modal — renders above everything */}
@@ -149,7 +152,7 @@ export function PhilippinesMap() {
                   cursor: "grab",
                 }}
               >
-                <div className="relative w-full max-w-[440px]">
+                <div className="relative w-full max-w-110">
                   <MapContent
                     hoveredRegion={hoveredRegion}
                     onHover={handleHover}
