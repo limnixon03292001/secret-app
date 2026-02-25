@@ -15,6 +15,7 @@ export async function proxy(request: NextRequest) {
   const isOnProtectedRoutes = protectedRoutes.includes(nextUrl.pathname);
 
   // const isOnAuthRoutes = nextUrl.pathname.startsWith("/auth");
+  console.log("proxy", isLoggedIn, isOnProtectedRoutes, nextUrl);
 
   if (isOnProtectedRoutes && !isLoggedIn) {
     return NextResponse.redirect(new URL("/auth/login", request.url));

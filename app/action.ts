@@ -371,12 +371,13 @@ export async function sendEmailAction({
   }
 }
 
+// to be deleted
 export async function checkLocationAction(lat: number, lng: number) {
   if (!lat || !lng) {
     throw new Error("Missing coordinates");
   }
 
-  console.log("server action lat lng", lat, lng);
+  // console.log("server action lat lng", lat, lng);
 
   const googleApi = await fetch(
     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.GOOGLE_GEOCODE_API_KEY}`,
@@ -390,17 +391,17 @@ export async function checkLocationAction(lat: number, lng: number) {
     );
   }
 
-  const components = data.results[0].address_components;
+  // const components = data.results[0].address_components;
 
-  const province = components.find((c: any) =>
-    c.types.includes("administrative_area_level_1"),
-  )?.long_name;
+  // const province = components.find((c: any) =>
+  //   c.types.includes("administrative_area_level_1"),
+  // )?.long_name;
 
-  const city = components.find(
-    (c: any) =>
-      c.types.includes("locality") ||
-      c.types.includes("administrative_area_level_2"),
-  )?.long_name;
+  // const city = components.find(
+  //   (c: any) =>
+  //     c.types.includes("locality") ||
+  //     c.types.includes("administrative_area_level_2"),
+  // )?.long_name;
 
   // console.log("Province:", province, "City:", city, data.results);
 

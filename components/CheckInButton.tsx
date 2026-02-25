@@ -1,108 +1,62 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Loader2, Navigation } from "lucide-react";
-import { mapRegions } from "@/data/philippinesData";
+import { motion } from "framer-motion";
+import { Loader2, Navigation } from "lucide-react";
 import { toast } from "sonner";
 import { checkLocationAction } from "@/app/action";
-import { table } from "console";
 
 export function CheckInButton() {
   const [isCheckingIn, setIsCheckingIn] = useState(false);
 
-  // const handleCheckIn = () => {
-  //   setIsCheckingIn(true);
+  // async function handleCheckLocation() {
+  //   try {
+  //     setIsCheckingIn(true);
 
-  //   let lat = null;
-  //   let lng = null;
+  //     const position = await new Promise<GeolocationPosition>(
+  //       (resolve, reject) =>
+  //         navigator.geolocation.getCurrentPosition(resolve, reject, {
+  //           enableHighAccuracy: true,
+  //         }),
+  //     );
 
-  //   navigator.geolocation.getCurrentPosition(
-  //     (position) => {
-  //       const { latitude, longitude } = position.coords;
-  //       lat = 13.163912157132854;
-  //       lng = 108.52264970828077;
-  //       console.log("User location:", latitude, longitude);
-  //       fetch(
-  //         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`,
-  //       )
-  //         .then((res) => res.json())
-  //         .then((data) => {
-  //           const results = data.results;
-  //           const components = results[0].address_components;
+  //     const { latitude, longitude } = position.coords;
 
-  //           const province = components.find((c: any) =>
-  //             c.types.includes("administrative_area_level_1"),
-  //           )?.long_name;
+  //     // For testing
+  //     // const latitude = 23.826565;
+  //     // const longitude = 115.151911;
 
-  //           const city = components.find(
-  //             (c: any) =>
-  //               c.types.includes("locality") ||
-  //               c.types.includes("administrative_area_level_2"),
-  //           )?.long_name;
+  //     const data = await checkLocationAction(latitude, longitude);
 
-  //           console.log("Province:", province, "City:", city, results);
-
-  //           alert(`${province} ${city}`);
-
-  //           const result = mapRegions.find((item) => {
-  //             const lowerTitle = item.title.toLowerCase();
-
-  //             const matchesFormatted = results[0].address_components.find(
-  //               (i: { short_name: string }) => {
-  //                 return i.short_name.toLowerCase().includes(lowerTitle);
-  //               },
-  //             );
-
-  //             return matchesFormatted;
-  //           });
-  //           setIsCheckingIn(false);
-
-  //           if (result === undefined) {
-  //             return toast.error(
-  //               "We’re unable to map your current location in our system. This may be because you’re using a VPN connected to another country or you’re currently outside the country.",
-  //             );
-  //           }
-  //           console.log("result", result);
-  //         });
-  //     },
-  //     (error) => {
-  //       console.error("Geolocation error:", error);
-  //       alert(`error: ${error}`);
-  //     },
-  //     { enableHighAccuracy: true },
-  //   );
-  // };
+  //     console.log("result", data);
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       toast.error(error.message);
+  //       console.error(error);
+  //     }
+  //   } finally {
+  //     setIsCheckingIn(false);
+  //   }
+  // }
 
   async function handleCheckLocation() {
-    try {
-      setIsCheckingIn(true);
+    const position = await new Promise<GeolocationPosition>((resolve, reject) =>
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+      }),
+    );
 
-      const position = await new Promise<GeolocationPosition>(
-        (resolve, reject) =>
-          navigator.geolocation.getCurrentPosition(resolve, reject, {
-            enableHighAccuracy: true,
-          }),
-      );
+    const { latitude, longitude } = position.coords;
 
-      const { latitude, longitude } = position.coords;
+    // If you are using a mobile device, enable location services
+    // (GPS location sharing with your browser) for the best current location accuracy
 
-      // For testing
-      // const latitude = 23.826565;
-      // const longitude = 115.151911;
-
-      const data = await checkLocationAction(latitude, longitude);
-
-      console.log("result", data);
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-        console.error(error);
-      }
-    } finally {
-      setIsCheckingIn(false);
-    }
+    fetch(`/api/geocode?lat=${latitude}&lng=${longitude}`)
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error("Error fetching data:", error));
   }
+
   return (
     <>
       <motion.button

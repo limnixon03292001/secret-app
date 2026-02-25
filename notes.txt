@@ -3,8 +3,8 @@
 - location is now working for now...
 
 tasks for tomorrow
-- clean up code on maps
-- add the api call on check in function
+- clean up code on maps //done
+- add the api call on check in function // done
 
 
 pending tasks
@@ -16,6 +16,8 @@ pending tasks
 integrate oauth google //done
 
 
+TODO Tomorrow
+check proper way to call from route handlers and how to check session when request
 
 
 login npm dependencies

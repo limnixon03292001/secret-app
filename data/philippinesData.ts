@@ -640,4 +640,9 @@ export const provinceDetails: Record<string, ProvinceDetail> = {
     visitDate: "October 3, 2023",
     exactAddress: "Muzon Malabon City",
   },
+  Laguna: {
+    visitorsCount: 7821,
+    visitDate: "October 3, 2021",
+    exactAddress: "Somewhere in Laguna",
+  },
 };

@@ -24,7 +24,7 @@ export const ProvinceModal = ({ regionId, onClose }: ProvinceModalProps) => {
   }, [onClose]);
 
   const regionColor =
-    regionData?.title === "ncr"
+    regionData?.title.toLocaleLowerCase() === "laguna"
       ? {
           text: "text-neon-blue",
           bg: "bg-neon-blue/20",
